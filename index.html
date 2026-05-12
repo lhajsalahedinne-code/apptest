@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Meta Tags for SEO and Mobile -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Creamy Bites - Une boutique de pancakes gourmande avec une ambiance chaleureuse">
+  <meta name="keywords" content="pancakes, gourmand, crepes, boutique, commande en ligne">
+  <meta name="author" content="Creamy Bites">
+  <meta name="theme-color" content="#6B3F2A">
+  <meta property="og:title" content="Creamy Bites - Pancakes Gourmands">
+  <meta property="og:description" content="Découvrez nos pancakes moelleux dans une ambiance chaleureuse">
+  <meta property="og:type" content="website">
+
+  <title>Creamy Bites - Pancakes Gourmands</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23C65A2E'>🥞</text></svg>">
+</head>
+<body>
+  <!-- ========================================
+       HEADER & NAVIGATION
+       ======================================== -->
+  <header>
+    <nav class="container flex-between">
+      <!-- Logo -->
+      <div class="logo logo-with-mark" onclick="window.location.href='index.html'">
+        <img src="assets/creamy-bites-logo.png" alt="" class="nav-logo-img" aria-hidden="true">
+        🥞 Creamy Bites
+      </div>
+
+      <!-- Navigation Links (Hidden on mobile) -->
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">À Propos</a></li>
+      </ul>
+
+      <!-- Navigation Icons -->
+      <div class="nav-icons hero-nav-icons">
+        <button class="menu-toggle" aria-label="Menu"></button>
+        <button class="icon-btn" data-cart-icon aria-label="Panier">
+          🛒
+          <span class="cart-count" style="display: none;">0</span>
+        </button>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================
+       HERO SECTION WITH ANIMATED BACKGROUND
+       ======================================== -->
+  <section class="hero cinematic-hero">
+    <!-- Three.js Canvas (Cinematic Background) -->
+    <canvas id="hero-canvas" class="hero-background"></canvas>
+
+    <!-- Fallback CSS Animation Background -->
+    <div class="hero-background cosmic-fallback" id="fallback-bg"></div>
+    <div class="hero-light-field" aria-hidden="true"></div>
+    <div class="hero-depth-grid" aria-hidden="true"></div>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <!-- Futuristic logo stage -->
+      <div class="hero-logo-stage" id="hero-logo">
+        <div class="logo-aura" aria-hidden="true"></div>
+        <div class="logo-ring logo-ring-outer" aria-hidden="true"></div>
+        <div class="logo-ring logo-ring-inner" aria-hidden="true"></div>
+        <img
+          src="assets/creamy-bites-logo.png"
+          alt="Creamy Bites"
+          class="hero-logo-image"
+          width="1024"
+          height="1024"
+          fetchpriority="high"
+        >
+      </div>
+
+      <!-- Tagline -->
+      <p class="hero-tagline">
+        <span>Pancakes moelleux, sirop chaud et toppings frais.</span>
+        Pancakes moelleux, sirop chaud et toppings frais
+      </p>
+
+      <!-- Call-to-Action Buttons -->
+      <div class="hero-ctas">
+        <a href="menu.html" class="btn btn-primary hero-menu-btn">
+          📋 Voir le Menu
+        </a>
+        <a href="checkout.html" class="btn btn-secondary hero-order-btn">
+          🛍️ Commander Maintenant
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       MINI CART DRAWER
+       ======================================== -->
+  <aside class="cart-drawer">
+    <div class="cart-header">
+      <h3>Mon Panier</h3>
+      <button class="cart-close" aria-label="Fermer le panier">✕</button>
+    </div>
+    <div class="cart-items">
+      <!-- Cart items will be rendered here by JavaScript -->
+    </div>
+    <div class="cart-summary">
+      <!-- Summary will be rendered here by JavaScript -->
+    </div>
+  </aside>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>À Propos</h4>
+          <p>Creamy Bites est une boutique de pancakes gourmande avec une ambiance chaleureuse et des recettes généreuses.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Liens Rapides</h4>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">À Propos</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <ul>
+            <li>📧 <a href="mailto:info@creamybites.com">info@creamybites.com</a></li>
+            <li>📱 <a href="tel:+212612345678">+212 6 12 34 56 78</a></li>
+            <li>📍 Marrakech, Maroc</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Creamy Bites. Tous droits réservés. | Fait avec amour et beaucoup de sirop</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================
+       SCRIPTS
+       ======================================== -->
+  
+  <!-- Three.js for cinematic background (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="js/app.js"></script>
+
+  <!-- Home Page Specific Script -->
+  <script>
+    /**
+     * HOME PAGE - Cinematic Three.js background
+     * Optimized procedural scene with particles, volumetric-style beams,
+     * subtle parallax, and soft camera movement.
+     */
+
+    let scene, camera, renderer, animationFrame;
+    const particleFields = [];
+    const lightBeams = [];
+    const portalRings = [];
+    const pointer = { x: 0, y: 0 };
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function initThreeJS() {
+      try {
+        const canvas = document.getElementById('hero-canvas');
+        if (!canvas || typeof THREE === 'undefined' || reducedMotion.matches) {
+          return false;
+        }
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x20120d, 0.032);
+
+        camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 120);
+        camera.position.set(0, 0.35, 10);
+
+        renderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: window.devicePixelRatio <= 1.5,
+          alpha: true,
+          powerPreference: 'high-performance'
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x20120d, 1);
+
+        createParticleField(900, 32, 0xf2b84b, 0.035, 0.48);
+        createParticleField(420, 46, 0xd9822b, 0.022, 0.34);
+        createParticleField(320, 28, 0x7a9b52, 0.028, 0.3);
+        createVolumetricBeams();
+        createPortalRings();
+
+        window.addEventListener('resize', onWindowResize);
+        window.addEventListener('pointermove', onPointerMove, { passive: true });
+
+        animate();
+        document.getElementById('fallback-bg').style.opacity = '0.16';
+        return true;
+      } catch (error) {
+        console.error('Three.js initialization failed:', error);
+        return false;
+      }
+    }
+
+    function createParticleField(count, spread, color, size, opacity) {
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(count * 3);
+
+      for (let i = 0; i < count * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * spread;
+        positions[i + 1] = (Math.random() - 0.5) * spread * 0.62;
+        positions[i + 2] = -Math.random() * spread;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const material = new THREE.PointsMaterial({
+        color,
+        size,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      const field = new THREE.Points(geometry, material);
+      scene.add(field);
+      particleFields.push(field);
+    }
+
+    function createVolumetricBeams() {
+      const beamGeometry = new THREE.PlaneGeometry(2.4, 24);
+      const colors = [0xf2b84b, 0xc65a2e, 0x7a9b52];
+
+      for (let i = 0; i < 7; i++) {
+        const material = new THREE.MeshBasicMaterial({
+          color: colors[i % colors.length],
+          transparent: true,
+          opacity: 0.075,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          side: THREE.DoubleSide
+        });
+
+        const beam = new THREE.Mesh(beamGeometry, material);
+        beam.position.set((i - 3) * 2.6, Math.sin(i) * 1.2, -10 - i * 1.6);
+        beam.rotation.set(Math.PI / 2.7, 0, -0.72 + i * 0.23);
+        scene.add(beam);
+        lightBeams.push(beam);
+      }
+    }
+
+    function createPortalRings() {
+      const colors = [0xf2b84b, 0xc65a2e, 0x7a9b52];
+
+      for (let i = 0; i < 3; i++) {
+        const geometry = new THREE.TorusGeometry(4.2 + i * 0.7, 0.012, 8, 150);
+        const material = new THREE.MeshBasicMaterial({
+          color: colors[i],
+          transparent: true,
+          opacity: 0.24 - i * 0.045,
+          blending: THREE.AdditiveBlending
+        });
+
+        const ring = new THREE.Mesh(geometry, material);
+        ring.position.z = -7.5 - i * 1.1;
+        ring.rotation.x = Math.PI / 2.15;
+        ring.rotation.z = i * 0.5;
+        scene.add(ring);
+        portalRings.push(ring);
+      }
+    }
+
+    function onPointerMove(event) {
+      pointer.x = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointer.y = (event.clientY / window.innerHeight - 0.5) * 2;
+    }
+
+    function animate() {
+      animationFrame = requestAnimationFrame(animate);
+      const time = performance.now() * 0.001;
+
+      particleFields.forEach((field, index) => {
+        field.rotation.y = time * (0.018 + index * 0.01);
+        field.rotation.x = Math.sin(time * 0.22 + index) * 0.035;
+        field.position.x = pointer.x * (0.18 + index * 0.05);
+        field.position.y = -pointer.y * (0.08 + index * 0.04);
+      });
+
+      lightBeams.forEach((beam, index) => {
+        beam.material.opacity = 0.052 + Math.sin(time * 0.8 + index) * 0.018;
+        beam.rotation.z += 0.0009 * (index % 2 === 0 ? 1 : -1);
+      });
+
+      portalRings.forEach((ring, index) => {
+        ring.rotation.z += 0.0018 * (index % 2 === 0 ? 1 : -1);
+        ring.position.y = Math.sin(time * 0.45 + index) * 0.1;
+      });
+
+      camera.position.x += (pointer.x * 0.42 - camera.position.x) * 0.035;
+      camera.position.y += (-pointer.y * 0.24 + 0.35 - camera.position.y) * 0.035;
+      camera.position.z = 10 + Math.sin(time * 0.45) * 0.16;
+      camera.lookAt(0, 0, -8);
+
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      if (!renderer || !camera) return;
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function setupLogoParallax() {
+      const logo = document.getElementById('hero-logo');
+      if (!logo || reducedMotion.matches) return;
+
+      window.addEventListener('pointermove', (event) => {
+        const x = (event.clientX / window.innerWidth - 0.5) * 8;
+        const y = (event.clientY / window.innerHeight - 0.5) * -8;
+        logo.style.setProperty('--tilt-x', `${y}deg`);
+        logo.style.setProperty('--tilt-y', `${x}deg`);
+      }, { passive: true });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const threeInitialized = initThreeJS();
+      setupLogoParallax();
+
+      if (reducedMotion.matches) {
+        document.getElementById('hero-canvas').style.display = 'none';
+      }
+
+      console.log('Home page initialized. Three.js:', threeInitialized ? 'active' : 'fallback');
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      if (renderer) renderer.dispose();
+    });
+  </script>
+
+  <!-- Keyboard Navigation Support -->
+  <script>
+    document.addEventListener('keydown', (e) => {
+      // Alt+M: Open Menu
+      if (e.altKey && e.key === 'm') {
+        window.location.href = 'menu.html';
+      }
+      // Alt+O: Order Now
+      if (e.altKey && e.key === 'o') {
+        window.location.href = 'checkout.html';
+      }
+      // Alt+C: Toggle Cart
+      if (e.altKey && e.key === 'c') {
+        UIManager.toggleCartDrawer();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Panel - Creamy Bites">
+  <meta name="keywords" content="admin, gestion, produits">
+  <meta name="theme-color" content="#6B3F2A">
+
+  <title>Admin Panel - Creamy Bites</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23C65A2E'>🥞</text></svg>">
+
+  <style>
+    /* Admin Page Specific Styles */
+    .admin-container {
+      margin-top: 80px;
+      min-height: calc(100vh - 80px);
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, rgba(107, 63, 42, 0.22), rgba(198, 90, 46, 0.18));
+      border-bottom: 2px solid rgba(242, 184, 75, 0.46);
+      padding: var(--spacing-xl) 0;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .admin-header h1 {
+      color: var(--color-neon-pink);
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+      flex-wrap: wrap;
+    }
+
+    .admin-nav button {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      background: rgba(242, 184, 75, 0.12);
+      border: 2px solid rgba(242, 184, 75, 0.34);
+      border-radius: var(--radius-md);
+      color: var(--color-neon-cyan);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-weight: 600;
+    }
+
+    .admin-nav button:hover,
+    .admin-nav button.active {
+      background: var(--color-neon-cyan);
+      color: var(--color-dark-bg);
+      border-color: var(--color-neon-cyan);
+    }
+
+    .admin-section {
+      background: var(--color-card-bg);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    .admin-section h2 {
+      color: var(--color-neon-pink);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-grid.full {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-form {
+      background: rgba(255, 248, 239, 0.07);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    .form-actions button {
+      flex: 1;
+    }
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacing-lg);
+    }
+
+    .products-table thead {
+      background: rgba(242, 184, 75, 0.12);
+    }
+
+    .products-table th {
+      padding: var(--spacing-md);
+      text-align: left;
+      color: var(--color-neon-cyan);
+      font-weight: 700;
+      border-bottom: 2px solid rgba(242, 184, 75, 0.34);
+    }
+
+    .products-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+      color: var(--color-text-secondary);
+    }
+
+    .products-table tr:hover {
+      background: rgba(255, 248, 239, 0.07);
+    }
+
+    .product-name {
+      color: var(--color-neon-pink);
+      font-weight: 600;
+    }
+
+    .product-price {
+      color: var(--color-accent-gold);
+      font-weight: 700;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .action-buttons button {
+      padding: var(--spacing-xs) var(--spacing-md);
+      font-size: 0.75rem;
+      flex: 1;
+    }
+
+    .orders-list {
+      display: grid;
+      gap: var(--spacing-lg);
+    }
+
+    .order-card {
+      background: rgba(255, 248, 239, 0.07);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+    }
+
+    .order-id {
+      color: var(--color-neon-cyan);
+      font-weight: 700;
+    }
+
+    .order-status {
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .order-status.pending {
+      background: rgba(255, 209, 102, 0.2);
+      color: var(--color-accent-gold);
+    }
+
+    .order-status.completed {
+      background: rgba(81, 207, 102, 0.2);
+      color: #51CF66;
+    }
+
+    .order-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .order-detail-item {
+      background: rgba(255, 248, 239, 0.07);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+    }
+
+    .order-detail-label {
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .order-detail-value {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+
+    .order-items {
+      background: rgba(255, 248, 239, 0.07);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid rgba(242, 184, 75, 0.16);
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-card {
+      background: rgba(255, 248, 239, 0.07);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      text-align: center;
+    }
+
+    .stat-label {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .stat-value {
+      color: var(--color-neon-cyan);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .import-export {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    .import-export button {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .products-table {
+        font-size: 0.85rem;
+      }
+
+      .products-table th,
+      .products-table td {
+        padding: var(--spacing-sm);
+      }
+
+      .admin-nav {
+        flex-direction: column;
+      }
+
+      .admin-nav button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================
+       HEADER & NAVIGATION
+       ======================================== -->
+  <header>
+    <nav class="container flex-between">
+      <!-- Logo -->
+      <div class="logo" onclick="window.location.href='index.html'">
+        🥞 Creamy Bites
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">À Propos</a></li>
+      </ul>
+
+      <!-- Navigation Icons -->
+      <div class="nav-icons">
+        <button class="icon-btn" onclick="logout()" aria-label="Déconnexion">
+          🚪
+        </button>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================
+       ADMIN CONTAINER
+       ======================================== -->
+  <div class="admin-container">
+    <div class="container">
+      <!-- Admin Header -->
+      <div class="admin-header">
+        <h1>🔐 Panneau Administrateur</h1>
+        <p style="color: var(--color-text-secondary); margin-top: var(--spacing-md);">
+          Gérez les produits, les commandes et les paramètres du site
+        </p>
+        
+        <!-- Navigation -->
+        <div class="admin-nav">
+          <button class="admin-nav-btn active" data-section="dashboard" onclick="switchSection('dashboard')">
+            📊 Tableau de Bord
+          </button>
+          <button class="admin-nav-btn" data-section="products" onclick="switchSection('products')">
+            🥞 Produits
+          </button>
+          <button class="admin-nav-btn" data-section="orders" onclick="switchSection('orders')">
+            📦 Commandes
+          </button>
+          <button class="admin-nav-btn" data-section="settings" onclick="switchSection('settings')">
+            ⚙️ Paramètres
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================
+           DASHBOARD SECTION
+           ======================================== -->
+      <div class="admin-section active" id="dashboard-section">
+        <h2>Tableau de Bord</h2>
+        
+        <div class="stats-grid" id="stats-grid">
+          <!-- Stats will be rendered here -->
+        </div>
+
+        <h3 style="color: var(--color-neon-pink); margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+          Dernières Commandes
+        </h3>
+        <div class="orders-list" id="recent-orders">
+          <!-- Recent orders will be rendered here -->
+        </div>
+      </div>
+
+      <!-- ========================================
+           PRODUCTS SECTION
+           ======================================== -->
+      <div class="admin-section" id="products-section">
+        <h2>Gestion des Produits</h2>
+
+        <!-- Add Product Form -->
+        <div class="admin-form">
+          <h3 style="color: var(--color-accent-gold); margin-bottom: var(--spacing-lg);">
+            ➕ Ajouter un Nouveau Produit
+          </h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="add-product-name">Nom du Produit *</label>
+              <input type="text" id="add-product-name" placeholder="Ex: Pancake Spécial" required>
+            </div>
+            <div class="form-group">
+              <label for="add-product-price">Prix (DH) *</label>
+              <input type="number" id="add-product-price" placeholder="45" min="0" step="0.01" required>
+            </div>
+          </div>
+
+          <div class="form-grid full">
+            <div class="form-group">
+              <label for="add-product-description">Description *</label>
+              <textarea id="add-product-description" placeholder="Description du produit" rows="3" required></textarea>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="add-product-image">URL de l'Image *</label>
+              <input type="text" id="add-product-image" placeholder="assets/pancakes/pancake.jpg" required>
+            </div>
+            <div class="form-group">
+              <label for="add-product-tags">Tags (séparés par des virgules)</label>
+              <input type="text" id="add-product-tags" placeholder="premium, fruit, special">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="addProduct()">Ajouter le Produit</button>
+            <button class="btn btn-ghost" onclick="clearAddForm()">Réinitialiser</button>
+          </div>
+        </div>
+
+        <!-- Products Table -->
+        <h3 style="color: var(--color-accent-gold); margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+          📋 Liste des Produits
+        </h3>
+
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Description</th>
+              <th>Prix</th>
+              <th>Tags</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <!-- Products will be rendered here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ========================================
+           ORDERS SECTION
+           ======================================== -->
+      <div class="admin-section" id="orders-section">
+        <h2>Gestion des Commandes</h2>
+
+        <div class="import-export">
+          <button class="btn btn-secondary" onclick="exportOrders()">
+            📥 Exporter Toutes les Commandes
+          </button>
+          <button class="btn btn-secondary" onclick="importOrders()">
+            📤 Importer des Commandes
+          </button>
+        </div>
+
+        <div class="orders-list" id="all-orders">
+          <!-- Orders will be rendered here -->
+        </div>
+      </div>
+
+      <!-- ========================================
+           SETTINGS SECTION
+           ======================================== -->
+      <div class="admin-section" id="settings-section">
+        <h2>Paramètres</h2>
+
+        <div class="admin-form">
+          <h3 style="color: var(--color-accent-gold); margin-bottom: var(--spacing-lg);">
+            Gestion des Données
+          </h3>
+
+          <p style="color: var(--color-text-secondary); margin-bottom: var(--spacing-lg);">
+            Exportez ou importez les données de votre boutique
+          </p>
+
+          <div class="form-actions">
+            <button class="btn btn-secondary" onclick="exportAllData()">
+              📥 Exporter Toutes les Données
+            </button>
+            <button class="btn btn-secondary" onclick="importAllData()">
+              📤 Importer des Données
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-form">
+          <h3 style="color: var(--color-accent-gold); margin-bottom: var(--spacing-lg);">
+            ⚠️ Zone de Danger
+          </h3>
+
+          <p style="color: var(--color-text-secondary); margin-bottom: var(--spacing-lg);">
+            Ces actions sont irréversibles. Utilisez avec prudence.
+          </p>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" onclick="resetAllData()">
+              🔄 Réinitialiser Tous les Produits
+            </button>
+            <button class="btn btn-ghost" onclick="clearAllOrders()">
+              🗑️ Supprimer Toutes les Commandes
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-form">
+          <h3 style="color: var(--color-accent-gold); margin-bottom: var(--spacing-lg);">
+            ℹ️ Informations
+          </h3>
+
+          <p style="color: var(--color-text-secondary);">
+            <strong>⚠️ Note de Sécurité:</strong> Cette page d'administration utilise une authentification côté client uniquement. 
+            En production, implémentez une authentification serveur robuste avec JWT, sessions sécurisées, et contrôle d'accès basé sur les rôles (RBAC).
+          </p>
+
+          <p style="color: var(--color-text-secondary); margin-top: var(--spacing-md);">
+            <strong>Stockage des Données:</strong> Toutes les données sont stockées dans localStorage du navigateur. 
+            Les données ne sont pas synchronisées entre les navigateurs ou les appareils.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>À Propos</h4>
+          <p>Creamy Bites est une boutique de pancakes gourmande avec une ambiance chaleureuse et des recettes généreuses.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Liens Rapides</h4>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">À Propos</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <ul>
+            <li>📧 <a href="mailto:info@creamybites.com">info@creamybites.com</a></li>
+            <li>📱 <a href="tel:+212612345678">+212 6 12 34 56 78</a></li>
+            <li>📍 Marrakech, Maroc</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Creamy Bites. Tous droits réservés. | Fait avec amour et beaucoup de sirop</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================
+       SCRIPTS
+       ======================================== -->
+  <script src="js/app.js"></script>
+
+  <script>
+    /**
+     * ADMIN PAGE - Dashboard and Management
+     */
+
+    /**
+     * Check admin authentication on page load
+     */
+    function checkAdminAuth() {
+      const password = prompt('Mot de passe administrateur:');
+      if (password !== ADMIN_PASSWORD) {
+        UIManager.showToast('Accès refusé!', 'error');
+        window.location.href = 'index.html';
+      }
+    }
+
+    /**
+     * Switch between admin sections
+     */
+    function switchSection(sectionName) {
+      // Hide all sections
+      document.querySelectorAll('.admin-section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Remove active class from all nav buttons
+      document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show selected section
+      document.getElementById(sectionName + '-section').classList.add('active');
+
+      // Add active class to selected nav button
+      const activeButton = document.querySelector(`.admin-nav-btn[data-section="${sectionName}"]`);
+      if (activeButton) {
+        activeButton.classList.add('active');
+      }
+
+      // Render section-specific content
+      if (sectionName === 'dashboard') {
+        renderDashboard();
+      } else if (sectionName === 'products') {
+        renderProducts();
+      } else if (sectionName === 'orders') {
+        renderOrders();
+      }
+    }
+
+    /**
+     * Render dashboard with statistics
+     */
+    function renderDashboard() {
+      const products = ProductManager.getAll();
+      const orders = OrderManager.getAll();
+      const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+
+      const statsGrid = document.getElementById('stats-grid');
+      statsGrid.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Produits</div>
+          <div class="stat-value">${products.length}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Commandes</div>
+          <div class="stat-value">${orders.length}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenu Total</div>
+          <div class="stat-value">${totalRevenue.toFixed(0)} DH</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenu Moyen</div>
+          <div class="stat-value">${orders.length > 0 ? (totalRevenue / orders.length).toFixed(0) : 0} DH</div>
+        </div>
+      `;
+
+      // Render recent orders
+      const recentOrders = orders.slice(-5).reverse();
+      const recentOrdersDiv = document.getElementById('recent-orders');
+      
+      if (recentOrders.length === 0) {
+        recentOrdersDiv.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">Aucune commande</p>';
+        return;
+      }
+
+      recentOrdersDiv.innerHTML = recentOrders.map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">Commande #${order.id}</span>
+            <span class="order-status ${order.status}">${order.status === 'pending' ? 'En attente' : 'Complétée'}</span>
+          </div>
+          <div class="order-details">
+            <div class="order-detail-item">
+              <div class="order-detail-label">Client</div>
+              <div class="order-detail-value">${escapeHTML(order.customer?.firstName)} ${escapeHTML(order.customer?.lastName)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Email</div>
+              <div class="order-detail-value">${escapeHTML(order.customer?.email)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Total</div>
+              <div class="order-detail-value">${formatCurrency(order.total)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Date</div>
+              <div class="order-detail-value">${new Date(order.date).toLocaleDateString('fr-FR')}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * Render products table
+     */
+    function renderProducts() {
+      const products = ProductManager.getAll();
+      const tbody = document.getElementById('products-tbody');
+
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Aucun produit</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = products.map(product => `
+        <tr>
+          <td class="product-name">${escapeHTML(product.name)}</td>
+          <td>${escapeHTML(String(product.description || '').substring(0, 30))}${String(product.description || '').length > 30 ? '...' : ''}</td>
+          <td class="product-price">${formatCurrency(product.price)}</td>
+          <td>${(Array.isArray(product.tags) ? product.tags : []).map(tag => escapeHTML(tag)).join(', ')}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-secondary" onclick="editProduct(${Number(product.id)})">✏️</button>
+              <button class="btn btn-sm btn-ghost" onclick="deleteProduct(${Number(product.id)})">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    /**
+     * Add new product
+     */
+    function addProduct() {
+      const name = document.getElementById('add-product-name').value;
+      const price = parseFloat(document.getElementById('add-product-price').value);
+      const description = document.getElementById('add-product-description').value;
+      const image = document.getElementById('add-product-image').value;
+      const tags = document.getElementById('add-product-tags').value.split(',').map(t => t.trim());
+
+      if (!name.trim() || !Number.isFinite(price) || price <= 0 || !description.trim() || !image.trim()) {
+        UIManager.showToast('Veuillez remplir tous les champs requis', 'error');
+        return;
+      }
+
+      ProductManager.add({
+        name: name.trim(),
+        price,
+        description: description.trim(),
+        image: image.trim(),
+        tags: tags.filter(t => t)
+      });
+
+      clearAddForm();
+      renderProducts();
+      UIManager.showToast('Produit ajouté avec succès!', 'success');
+    }
+
+    /**
+     * Clear add product form
+     */
+    function clearAddForm() {
+      document.getElementById('add-product-name').value = '';
+      document.getElementById('add-product-price').value = '';
+      document.getElementById('add-product-description').value = '';
+      document.getElementById('add-product-image').value = '';
+      document.getElementById('add-product-tags').value = '';
+    }
+
+    /**
+     * Edit product
+     */
+    function editProduct(productId) {
+      const product = ProductManager.getById(productId);
+      if (!product) return;
+
+      const newName = prompt('Nom du produit:', product.name);
+      if (newName === null) return;
+
+      const newPrice = prompt('Prix (DH):', product.price);
+      if (newPrice === null) return;
+
+      const newDescription = prompt('Description:', product.description);
+      if (newDescription === null) return;
+
+      const parsedPrice = parseFloat(newPrice);
+      if (!newName.trim() || !Number.isFinite(parsedPrice) || parsedPrice <= 0 || !newDescription.trim()) {
+        UIManager.showToast('Valeurs invalides', 'error');
+        return;
+      }
+
+      ProductManager.update(productId, {
+        name: newName.trim(),
+        price: parsedPrice,
+        description: newDescription.trim()
+      });
+
+      renderProducts();
+      UIManager.showToast('Produit mis à jour!', 'success');
+    }
+
+    /**
+     * Delete product
+     */
+    function deleteProduct(productId) {
+      const product = ProductManager.getById(productId);
+      if (!product) {
+        UIManager.showToast('Produit introuvable', 'error');
+        return;
+      }
+      UIManager.showModal(
+        'Confirmer la suppression',
+        `Êtes-vous sûr de vouloir supprimer "${escapeHTML(product.name)}"?`,
+        () => {
+          ProductManager.delete(productId);
+          renderProducts();
+          UIManager.showToast('Produit supprimé!', 'success');
+        }
+      );
+    }
+
+    /**
+     * Render orders
+     */
+    function renderOrders() {
+      const orders = OrderManager.getAll();
+      const ordersDiv = document.getElementById('all-orders');
+
+      if (orders.length === 0) {
+        ordersDiv.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">Aucune commande</p>';
+        return;
+      }
+
+      ordersDiv.innerHTML = orders.slice().reverse().map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">Commande #${order.id}</span>
+            <select class="order-status ${order.status}" onchange="updateOrderStatus(${order.id}, this.value)">
+              <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>En attente</option>
+              <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Complétée</option>
+            </select>
+          </div>
+          <div class="order-details">
+            <div class="order-detail-item">
+              <div class="order-detail-label">Client</div>
+              <div class="order-detail-value">${escapeHTML(order.customer?.firstName)} ${escapeHTML(order.customer?.lastName)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Email</div>
+              <div class="order-detail-value">${escapeHTML(order.customer?.email)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Téléphone</div>
+              <div class="order-detail-value">${escapeHTML(order.customer?.phone)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Total</div>
+              <div class="order-detail-value">${formatCurrency(order.total)}</div>
+            </div>
+            <div class="order-detail-item">
+              <div class="order-detail-label">Date</div>
+              <div class="order-detail-value">${new Date(order.date).toLocaleDateString('fr-FR')}</div>
+            </div>
+          </div>
+          <div class="order-items">
+            <strong style="color: var(--color-neon-cyan);">Articles:</strong>
+            ${(Array.isArray(order.items) ? order.items : []).map(item => `
+              <div class="order-item">
+                <span>${escapeHTML(item.name)} x${item.quantity}</span>
+                <span>${formatCurrency(item.price * item.quantity)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * Update order status
+     */
+    function updateOrderStatus(orderId, status) {
+      OrderManager.updateStatus(orderId, status);
+      UIManager.showToast('Statut de la commande mis à jour!', 'success');
+    }
+
+    /**
+     * Export orders as JSON
+     */
+    function exportOrders() {
+      OrderManager.exportAllJSON();
+      UIManager.showToast('Commandes exportées!', 'success');
+    }
+
+    /**
+     * Import orders from JSON
+     */
+    function importOrders() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const orders = JSON.parse(event.target.result);
+            if (Array.isArray(orders)) {
+              StorageManager.setOrders(orders);
+              renderOrders();
+              UIManager.showToast('Commandes importées avec succès!', 'success');
+            }
+          } catch (err) {
+            UIManager.showToast('Erreur lors de l\'import', 'error');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    /**
+     * Export all data
+     */
+    function exportAllData() {
+      const data = {
+        products: ProductManager.getAll(),
+        orders: OrderManager.getAll(),
+        exportDate: new Date().toISOString()
+      };
+      const dataStr = JSON.stringify(data, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `creamy-bites-backup-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      UIManager.showToast('Données exportées!', 'success');
+    }
+
+    /**
+     * Import all data
+     */
+    function importAllData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (data.products && data.orders) {
+              StorageManager.setProducts(data.products);
+              StorageManager.setOrders(data.orders);
+              UIManager.showToast('Données importées avec succès!', 'success');
+            }
+          } catch (err) {
+            UIManager.showToast('Erreur lors de l\'import', 'error');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    /**
+     * Reset all products to default
+     */
+    function resetAllData() {
+      UIManager.showModal(
+        'Confirmer la réinitialisation',
+        'Êtes-vous sûr? Cela restaurera les produits par défaut.',
+        () => {
+          StorageManager.setProducts(DEFAULT_PRODUCTS);
+          renderProducts();
+          UIManager.showToast('Produits réinitialisés!', 'success');
+        }
+      );
+    }
+
+    /**
+     * Clear all orders
+     */
+    function clearAllOrders() {
+      UIManager.showModal(
+        'Confirmer la suppression',
+        'Êtes-vous sûr? Toutes les commandes seront supprimées définitivement.',
+        () => {
+          StorageManager.setOrders([]);
+          renderOrders();
+          UIManager.showToast('Toutes les commandes ont été supprimées!', 'success');
+        }
+      );
+    }
+
+    /**
+     * Logout
+     */
+    function logout() {
+      if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminAuth();
+      renderDashboard();
+      console.log('Admin page initialized');
+    });
+  </script>
+</body>
+</html>

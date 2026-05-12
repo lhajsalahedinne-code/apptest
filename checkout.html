@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Passer votre commande - Creamy Bites">
+  <meta name="keywords" content="checkout, commande, paiement">
+  <meta name="theme-color" content="#6B3F2A">
+
+  <title>Passer la Commande - Creamy Bites</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23C65A2E'>🥞</text></svg>">
+
+  <style>
+    /* Checkout Page Specific Styles */
+    .checkout-header {
+      margin-top: 80px;
+      padding: var(--spacing-xl) 0;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(107, 63, 42, 0.14), rgba(198, 90, 46, 0.12));
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+    }
+
+    .checkout-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--spacing-xl);
+      margin: var(--spacing-xl) 0;
+    }
+
+    .checkout-form {
+      background: var(--color-card-bg);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .form-section h3 {
+      color: var(--color-neon-pink);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+      background: var(--color-card-bg);
+      border: 1px solid rgba(242, 184, 75, 0.24);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      backdrop-filter: blur(10px);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .order-summary h3 {
+      color: var(--color-neon-pink);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(242, 184, 75, 0.24);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md);
+      background: rgba(255, 248, 239, 0.07);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .summary-item-name {
+      flex: 1;
+    }
+
+    .summary-item-qty {
+      color: var(--color-text-secondary);
+      margin: 0 var(--spacing-md);
+    }
+
+    .summary-item-price {
+      color: var(--color-accent-gold);
+      font-weight: 700;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .summary-totals {
+      border-top: 1px solid rgba(242, 184, 75, 0.24);
+      padding-top: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-secondary);
+    }
+
+    .summary-row.total {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-accent-gold);
+      border-top: 1px solid rgba(242, 184, 75, 0.24);
+      padding-top: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--color-text-secondary);
+    }
+
+    .empty-cart p {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .success-message {
+      background: rgba(81, 207, 102, 0.1);
+      border: 2px solid #51CF66;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-xl) 0;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    .success-message h3 {
+      color: #51CF66;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .success-message p {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .order-details {
+      background: rgba(255, 248, 239, 0.07);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+
+    .order-details p {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .order-details strong {
+      color: var(--color-neon-cyan);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+
+      .order-summary {
+        position: static;
+        top: auto;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================
+       HEADER & NAVIGATION
+       ======================================== -->
+  <header>
+    <nav class="container flex-between">
+      <!-- Logo -->
+      <div class="logo" onclick="window.location.href='index.html'">
+        🥞 Creamy Bites
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">À Propos</a></li>
+      </ul>
+
+      <!-- Navigation Icons -->
+      <div class="nav-icons">
+        <button class="icon-btn" data-cart-icon aria-label="Panier">
+          🛒
+          <span class="cart-count" style="display: none;">0</span>
+        </button>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================
+       CHECKOUT HEADER
+       ======================================== -->
+  <section class="checkout-header">
+    <div class="container">
+      <h1>Passer la Commande</h1>
+      <p style="color: var(--color-text-secondary); margin-top: var(--spacing-md);">
+        Complétez votre commande en quelques étapes
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================================
+       MAIN CONTENT
+       ======================================== -->
+  <main class="container">
+    <!-- Success Message -->
+    <div class="success-message" id="success-message">
+      <h3>✓ La commande dazat, ansoniw lik lyoma!</h3>
+      <p>Votre commande a été reçue avec succès. Merci pour votre achat!</p>
+      <div class="order-details" id="order-details-success">
+        <!-- Order details will be inserted here -->
+      </div>
+      <button class="btn btn-primary" onclick="window.location.href='menu.html'" style="margin-top: var(--spacing-lg);">
+        Retourner au Menu
+      </button>
+    </div>
+
+    <!-- Checkout Form -->
+    <div id="checkout-form-container">
+      <div class="checkout-container">
+        <!-- Left: Checkout Form -->
+        <form id="checkout-form" class="checkout-form">
+          <!-- Customer Information Section -->
+          <div class="form-section">
+            <h3>Informations Personnelles</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Prénom *</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  name="firstName"
+                  placeholder="Votre prénom"
+                  required
+                  aria-required="true"
+                >
+              </div>
+              <div class="form-group">
+                <label for="lastName">Nom *</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  name="lastName"
+                  placeholder="Votre nom"
+                  required
+                  aria-required="true"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email"
+                  placeholder="votre@email.com"
+                  required
+                  aria-required="true"
+                >
+              </div>
+              <div class="form-group">
+                <label for="phone">Téléphone *</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="phone"
+                  placeholder="+212 6 12 34 56 78"
+                  required
+                  aria-required="true"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Information Section -->
+          <div class="form-section">
+            <h3>Adresse de Livraison</h3>
+            
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="address">Adresse (Optionnel)</label>
+                <input 
+                  type="text" 
+                  id="address" 
+                  name="address"
+                  placeholder="Votre adresse complète"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Ville</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city"
+                  placeholder="Marrakech"
+                >
+              </div>
+              <div class="form-group">
+                <label for="postal">Code Postal</label>
+                <input 
+                  type="text" 
+                  id="postal" 
+                  name="postal"
+                  placeholder="40000"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Options Section -->
+          <div class="form-section">
+            <h3>Options de Livraison</h3>
+            
+            <div class="checkbox-group">
+              <input 
+                type="checkbox" 
+                id="express-delivery" 
+                name="expressDelivery"
+              >
+              <label for="express-delivery">
+                Livraison Express (+50 DH) - Livraison dans 30 minutes
+              </label>
+            </div>
+
+            <div class="checkbox-group">
+              <input 
+                type="checkbox" 
+                id="gift-wrap" 
+                name="giftWrap"
+              >
+              <label for="gift-wrap">
+                Emballage Cadeau (+20 DH)
+              </label>
+            </div>
+          </div>
+
+          <!-- Special Instructions Section -->
+          <div class="form-section">
+            <h3>Instructions Spéciales</h3>
+            
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="notes">Notes de Commande</label>
+                <textarea 
+                  id="notes" 
+                  name="notes"
+                  placeholder="Allergies, préférences, etc."
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="checkbox-group">
+            <input 
+              type="checkbox" 
+              id="terms" 
+              name="terms"
+              required
+              aria-required="true"
+            >
+            <label for="terms">
+              J'accepte les conditions d'utilisation et la politique de confidentialité *
+            </label>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-lg);">
+            Confirmer la Commande
+          </button>
+        </form>
+
+        <!-- Right: Order Summary -->
+        <div class="order-summary" id="order-summary">
+          <h3>Résumé de la Commande</h3>
+          
+          <div id="summary-items">
+            <!-- Items will be rendered here -->
+          </div>
+
+          <div class="summary-totals">
+            <div class="summary-row">
+              <span>Sous-total:</span>
+              <span id="subtotal">0 DH</span>
+            </div>
+            <div class="summary-row">
+              <span>Livraison Express:</span>
+              <span id="delivery-cost">0 DH</span>
+            </div>
+            <div class="summary-row">
+              <span>Emballage Cadeau:</span>
+              <span id="gift-cost">0 DH</span>
+            </div>
+            <div class="summary-row">
+              <span>Taxe (10%):</span>
+              <span id="tax">0 DH</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span id="total">0 DH</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty Cart Message -->
+    <div class="empty-cart" id="empty-cart" style="display: none;">
+      <p>Votre panier est vide.</p>
+      <a href="menu.html" class="btn btn-primary">Retourner au Menu</a>
+    </div>
+  </main>
+
+  <!-- ========================================
+       MINI CART DRAWER
+       ======================================== -->
+  <aside class="cart-drawer">
+    <div class="cart-header">
+      <h3>Mon Panier</h3>
+      <button class="cart-close" aria-label="Fermer le panier">✕</button>
+    </div>
+    <div class="cart-items">
+      <!-- Cart items will be rendered here by JavaScript -->
+    </div>
+    <div class="cart-summary">
+      <!-- Summary will be rendered here by JavaScript -->
+    </div>
+  </aside>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>À Propos</h4>
+          <p>Creamy Bites est une boutique de pancakes gourmande avec une ambiance chaleureuse et des recettes généreuses.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Liens Rapides</h4>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">À Propos</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <ul>
+            <li>📧 <a href="mailto:info@creamybites.com">info@creamybites.com</a></li>
+            <li>📱 <a href="tel:+212612345678">+212 6 12 34 56 78</a></li>
+            <li>📍 Marrakech, Maroc</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Creamy Bites. Tous droits réservés. | Fait avec amour et beaucoup de sirop</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================
+       SCRIPTS
+       ======================================== -->
+  
+  <!-- EmailJS CDN (for email sending) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="js/app.js"></script>
+
+  <script>
+    /**
+     * CHECKOUT PAGE - Order Processing and Email Integration
+     */
+
+    /**
+     * Check if cart is empty and show appropriate view
+     */
+    function checkCartStatus() {
+      const cart = StorageManager.getCart();
+      const formContainer = document.getElementById('checkout-form-container');
+      const emptyCart = document.getElementById('empty-cart');
+
+      if (cart.length === 0) {
+        formContainer.style.display = 'none';
+        emptyCart.style.display = 'block';
+      } else {
+        formContainer.style.display = 'block';
+        emptyCart.style.display = 'none';
+        renderOrderSummary();
+      }
+    }
+
+    /**
+     * Render order summary
+     */
+    function renderOrderSummary() {
+      const cart = StorageManager.getCart();
+      const summaryItems = document.getElementById('summary-items');
+
+      if (!summaryItems) return;
+
+      summaryItems.innerHTML = cart.map(item => `
+        <div class="summary-item">
+          <div class="summary-item-name">
+            <strong>${escapeHTML(item.name)}</strong>
+          </div>
+          <div class="summary-item-qty">${item.quantity}x</div>
+          <div class="summary-item-price">${formatCurrency(item.price * item.quantity)}</div>
+        </div>
+      `).join('');
+
+      updateOrderTotal();
+    }
+
+    /**
+     * Get selected checkout options
+     */
+    function getCheckoutOptions() {
+      return {
+        expressDelivery: Boolean(document.getElementById('express-delivery')?.checked),
+        giftWrap: Boolean(document.getElementById('gift-wrap')?.checked)
+      };
+    }
+
+    /**
+     * Update order total with options
+     */
+    function updateOrderTotal() {
+      const totals = CartManager.calculateTotals(getCheckoutOptions());
+
+      document.getElementById('subtotal').textContent = formatCurrency(totals.subtotal);
+      document.getElementById('delivery-cost').textContent = formatCurrency(totals.deliveryCost);
+      document.getElementById('gift-cost').textContent = formatCurrency(totals.giftCost);
+      document.getElementById('tax').textContent = formatCurrency(totals.tax);
+      document.getElementById('total').textContent = formatCurrency(totals.total);
+    }
+
+    /**
+     * Validate form fields
+     */
+    function validateForm(formData) {
+      const errors = [];
+
+      if (!formData.firstName.trim()) {
+        errors.push('Le prénom est requis');
+      }
+
+      if (!formData.lastName.trim()) {
+        errors.push('Le nom est requis');
+      }
+
+      if (!isValidEmail(formData.email)) {
+        errors.push('Email invalide');
+      }
+
+      if (!isValidPhone(formData.phone)) {
+        errors.push('Téléphone invalide (format: +212 6 12 34 56 78)');
+      }
+
+      if (!formData.terms) {
+        errors.push('Vous devez accepter les conditions d\'utilisation');
+      }
+
+      return errors;
+    }
+
+    /**
+     * Handle form submission
+     */
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitButton = e.currentTarget.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Traitement...';
+      }
+
+      // Get form data
+      const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        postal: document.getElementById('postal').value,
+        expressDelivery: document.getElementById('express-delivery').checked,
+        giftWrap: document.getElementById('gift-wrap').checked,
+        notes: document.getElementById('notes').value,
+        terms: document.getElementById('terms').checked
+      };
+
+      // Validate form
+      const errors = validateForm(formData);
+      if (errors.length > 0) {
+        UIManager.showToast(errors[0], 'error');
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Confirmer la Commande';
+        }
+        return;
+      }
+
+      // Create order
+      const order = OrderManager.createOrder(formData);
+      if (!order) {
+        UIManager.showToast('Erreur lors de la création de la commande', 'error');
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Confirmer la Commande';
+        }
+        return;
+      }
+
+      // Log order to console (for debugging)
+      console.log('Order created:', order);
+
+      // Try to send email via EmailJS
+      sendOrderEmail(order, formData);
+
+      // Show success message
+      showSuccessMessage(order, formData);
+    });
+
+    /**
+     * Send order confirmation email via EmailJS
+     */
+    function sendOrderEmail(order, customerInfo) {
+      // Check if EmailJS is available
+      if (typeof emailjs === 'undefined') {
+        console.log('EmailJS not loaded. Email sending disabled.');
+        UIManager.showToast('Email non configuré - Commande sauvegardée localement', 'info');
+        return;
+      }
+
+      // Initialize EmailJS (replace with your User ID)
+      // emailjs.init('YOUR_USER_ID');
+
+      const templateParams = {
+        customer_name: customerInfo.firstName + ' ' + customerInfo.lastName,
+        customer_email: customerInfo.email,
+        order_id: order.id,
+        order_date: new Date(order.date).toLocaleDateString('fr-FR'),
+        items: order.items.map(item => `${item.name} (${item.quantity}x) - ${item.price} DH`).join('\n'),
+        subtotal: Number(order.subtotal || 0).toFixed(2),
+        delivery_cost: Number(order.deliveryCost || 0).toFixed(2),
+        gift_cost: Number(order.giftCost || 0).toFixed(2),
+        tax: Number(order.tax || 0).toFixed(2),
+        total: Number(order.total || 0).toFixed(2),
+        delivery_address: customerInfo.address || 'Non spécifiée',
+        phone: customerInfo.phone
+      };
+
+      // Replace with your actual Service ID and Template ID
+      const SERVICE_ID = 'YOUR_SERVICE_ID';
+      const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+      // Uncomment to enable email sending
+      /*
+      emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(response => {
+          console.log('Email sent successfully!', response);
+          UIManager.showToast('Email de confirmation envoyé!', 'success');
+        })
+        .catch(error => {
+          console.error('Email send failed:', error);
+          UIManager.showToast('Erreur lors de l\'envoi de l\'email', 'error');
+        });
+      */
+    }
+
+    /**
+     * Show success message with order details
+     */
+    function showSuccessMessage(order, customerInfo) {
+      // Hide form
+      document.getElementById('checkout-form-container').style.display = 'none';
+      document.getElementById('empty-cart').style.display = 'none';
+
+      // Show success message
+      const successMsg = document.getElementById('success-message');
+      successMsg.classList.add('show');
+
+      // Populate order details
+      const orderDetails = document.getElementById('order-details-success');
+      orderDetails.innerHTML = `
+        <p><strong>Numéro de Commande:</strong> ${order.id}</p>
+        <p><strong>Date:</strong> ${new Date(order.date).toLocaleDateString('fr-FR')}</p>
+        <p><strong>Client:</strong> ${escapeHTML(customerInfo.firstName)} ${escapeHTML(customerInfo.lastName)}</p>
+        <p><strong>Email:</strong> ${escapeHTML(customerInfo.email)}</p>
+        <p><strong>Téléphone:</strong> ${escapeHTML(customerInfo.phone)}</p>
+        <p><strong>Sous-total:</strong> ${formatCurrency(order.subtotal)}</p>
+        <p><strong>Livraison Express:</strong> ${formatCurrency(order.deliveryCost || 0)}</p>
+        <p><strong>Emballage Cadeau:</strong> ${formatCurrency(order.giftCost || 0)}</p>
+        <p><strong>Taxe:</strong> ${formatCurrency(order.tax)}</p>
+        <p><strong>Total:</strong> ${formatCurrency(order.total)}</p>
+        <p style="margin-top: var(--spacing-md); color: var(--color-neon-cyan);">
+          ✓ Votre commande a été enregistrée et sera traitée sous peu.
+        </p>
+      `;
+
+      // Export order as JSON
+      OrderManager.exportJSON(order.id);
+
+      // Scroll to success message
+      setTimeout(() => {
+        successMsg.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+
+    /**
+     * Setup event listeners for options
+     */
+    function setupEventListeners() {
+      const expressDelivery = document.getElementById('express-delivery');
+      const giftWrap = document.getElementById('gift-wrap');
+
+      if (expressDelivery) {
+        expressDelivery.addEventListener('change', updateOrderTotal);
+      }
+
+      if (giftWrap) {
+        giftWrap.addEventListener('change', updateOrderTotal);
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      checkCartStatus();
+      setupEventListeners();
+      console.log('Checkout page initialized');
+    });
+
+    // Keyboard shortcut: Alt+S to submit form
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey && e.key === 's') {
+        document.getElementById('checkout-form').requestSubmit();
+      }
+    });
+  </script>
+</body>
+</html>
